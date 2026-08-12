@@ -3,9 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <meta name="description" content="College EventHub helps students discover, register for, and track campus events.">
+    <title>College EventHub | Your Campus, One Place</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Home Page</h1>
+    <header class="nav">
+        <div class="container nav-inner">
+            <a class="brand" href="#home" aria-label="College EventHub home"><span class="brand-mark">🎓</span> College EventHub</a>
+            <nav class="nav-links" aria-label="Main navigation"><a href="#events">Explore</a><a href="#categories">Categories</a><a href="#how-it-works">How it works</a></nav>
+            <button class="btn btn-secondary" type="button" id="myEventsButton">My Events <span id="registrationCount">0</span></button>
+        </div>
+    </header>
+
+    <main id="home">
+        <section class="hero container">
+            <span class="eyebrow">✦ YOUR CAMPUS. ONE PLACE.</span>
+            <h1>Discover what’s <span class="gradient-text">happening on campus.</span></h1>
+            <p>Find events you love, register in seconds, and never miss an opportunity to learn, compete, create, or connect.</p>
+            <div class="hero-actions"><a class="btn btn-primary" href="#events">Explore Events</a><button class="btn btn-secondary" type="button" id="featuredButton">View Featured</button></div>
+            <div class="stats" aria-label="EventHub statistics"><div class="stat"><strong>24+</strong><span>Campus events</span></div><div class="stat"><strong>8</strong><span>Event categories</span></div><div class="stat"><strong>2.4K</strong><span>Students connected</span></div></div>
+        </section>
+
+        <section class="container" id="events">
+            <div class="section-heading"><div><h2>Explore Events</h2><p>Find your next campus experience.</p></div></div>
+            <div class="events-tools"><input class="search" id="searchInput" type="search" placeholder="🔍 Search hackathons, workshops, sports..." aria-label="Search events"><div class="filters" aria-label="Event categories"><button class="filter active" data-category="All">All</button><button class="filter" data-category="Technology">Technology</button><button class="filter" data-category="Competition">Competition</button><button class="filter" data-category="Cultural">Cultural</button><button class="filter" data-category="Workshop">Workshop</button></div></div>
+            <div class="events-grid" id="eventsGrid"></div>
+        </section>
+
+        <section class="container" id="categories">
+            <div class="section-heading"><div><h2>Browse your interests</h2><p>Every student deserves an event they are excited about.</p></div></div>
+            <div class="categories">
+                <button class="category" data-category="Technology"><span>💻</span><b>Technology</b><small>Hackathons & talks</small></button>
+                <button class="category" data-category="Competition"><span>🏆</span><b>Competitions</b><small>Challenge yourself</small></button>
+                <button class="category" data-category="Workshop"><span>🎨</span><b>Workshops</b><small>Learn by doing</small></button>
+                <button class="category" data-category="Cultural"><span>🎭</span><b>Cultural</b><small>Celebrate creativity</small></button>
+            </div>
+        </section>
+
+        <section class="container" id="how-it-works">
+            <div class="section-heading"><div><h2>One simple journey</h2><p>From finding an opportunity to being ready for it.</p></div></div>
+            <div class="how"><article class="step"><strong>01</strong><h3>Discover</h3><p>Search, filter, and explore campus events.</p></article><article class="step"><strong>02</strong><h3>Understand</h3><p>Review the date, venue, prize, and eligibility.</p></article><article class="step"><strong>03</strong><h3>Register</h3><p>Submit a quick form and receive a unique ID.</p></article><article class="step"><strong>04</strong><h3>Participate</h3><p>Track your event and show your digital pass.</p></article></div>
+        </section>
+    </main>
+
+    <footer><div class="container">© 2026 College EventHub · Discover → Register → Participate</div></footer>
+
+    <div class="modal" id="eventModal" role="dialog" aria-modal="true" aria-labelledby="eventTitle"><div class="dialog"><button class="close" type="button" aria-label="Close">×</button><div id="eventContent"></div></div></div>
+    <div class="modal" id="registrationModal" role="dialog" aria-modal="true" aria-labelledby="registrationTitle"><div class="dialog"><button class="close" type="button" aria-label="Close">×</button><h2 id="registrationTitle">Register for <span id="registrationEventName"></span></h2><p style="color: var(--muted);">Join the event in less than a minute.</p><form id="registrationForm" novalidate><div class="form-grid"><label class="field">Full name<input id="name" required autocomplete="name" placeholder="Your name"></label><label class="field">College email<input id="email" required type="email" autocomplete="email" placeholder="you@college.edu"></label><label class="field">Branch<select id="branch" required><option value="">Select branch</option><option>CSE</option><option>IT</option><option>ECE</option><option>Mechanical</option><option>Other</option></select></label><label class="field">Year<select id="year" required><option value="">Select year</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option></select></label><label class="field full">Phone number<input id="phone" required inputmode="numeric" pattern="[0-9]{10}" placeholder="10-digit mobile number"></label></div><p class="form-message" id="formMessage" role="alert"></p><button class="btn btn-primary" style="width:100%" type="submit">Confirm Registration</button></form></div></div>
+    <div class="modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle"><div class="dialog success"><button class="close" type="button" aria-label="Close">×</button><div class="success-icon">✓</div><h2 id="successTitle">You’re registered!</h2><p style="color: var(--muted);">Your event has been added to <b>My Events</b>.</p><div class="pass" id="eventPass"></div><button class="btn btn-primary" type="button" id="viewMyEvents">View My Events</button></div></div>
+
+    <script>
+        const events = [
+            { id: 1, title: 'Campus Hackathon 2026', category: 'Technology', icon: '💻', date: '18 Aug 2026', time: '9:00 AM', venue: 'Innovation Lab', prize: '₹10,000', seats: 42, description: 'Build a meaningful solution with your team in a high-energy 24-hour campus hackathon.', featured: true },
+            { id: 2, title: 'AI & Future Tech Summit', category: 'Technology', icon: '🤖', date: '22 Aug 2026', time: '10:30 AM', venue: 'Seminar Hall', prize: 'Certificate', seats: 68, description: 'Explore how artificial intelligence is shaping careers, creativity, and tomorrow’s technology.', featured: true },
+            { id: 3, title: 'CodeSprint Challenge', category: 'Competition', icon: '🏆', date: '26 Aug 2026', time: '11:00 AM', venue: 'Computer Lab 2', prize: '₹5,000', seats: 30, description: 'Test your problem-solving skills in a fast-paced coding competition.', featured: true },
+            { id: 4, title: 'Design Thinking Workshop', category: 'Workshop', icon: '🎨', date: '29 Aug 2026', time: '2:00 PM', venue: 'Creative Studio', prize: 'Certificate', seats: 25, description: 'Turn real problems into practical ideas with a hands-on design-thinking workshop.', featured: false },
+            { id: 5, title: 'Rhythm Cultural Fest', category: 'Cultural', icon: '🎭', date: '03 Sep 2026', time: '4:00 PM', venue: 'Open Auditorium', prize: '₹15,000', seats: 100, description: 'Celebrate music, dance, theatre, and creative expression with the whole campus.', featured: false },
+            { id: 6, title: 'Startup Pitch Arena', category: 'Competition', icon: '🚀', date: '07 Sep 2026', time: '1:00 PM', venue: 'Conference Room', prize: '₹8,000', seats: 35, description: 'Present your startup idea, receive feedback, and compete for the best pitch.', featured: false }
+        ];
+        const grid = document.getElementById('eventsGrid');
+        const searchInput = document.getElementById('searchInput');
+        let category = 'All'; let selectedEvent = null;
+        const registrations = JSON.parse(localStorage.getItem('cehRegistrations') || '[]');
+
+        function renderEvents() {
+            const term = searchInput.value.trim().toLowerCase();
+            const filtered = events.filter(event => (category === 'All' || event.category === category) && `${event.title} ${event.category} ${event.description}`.toLowerCase().includes(term));
+            grid.innerHTML = filtered.length ? filtered.map(event => `<article class="event-card"><div class="event-top"><div class="event-icon">${event.icon}</div><span class="badge">${event.category}</span></div><h3>${event.title}</h3><p>${event.description}</p><div class="meta"><span>📅 ${event.date} · ${event.time}</span><span>📍 ${event.venue}</span><span>🏆 ${event.prize}</span></div><button class="btn btn-secondary" type="button" data-event-id="${event.id}">View Details</button></article>`).join('') : '<div class="empty">No events match your search. Try another keyword or category.</div>';
+        }
+        function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+        function closeModals() { document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('open')); document.body.style.overflow = ''; }
+        function showEvent(event) {
+            selectedEvent = event;
+            document.getElementById('eventContent').innerHTML = `<span class="badge">${event.category}</span><h2 id="eventTitle" style="margin-top:.8rem">${event.icon} ${event.title}</h2><p style="color:var(--muted); line-height:1.65">${event.description}</p><div class="details"><div class="detail">Date & time<b>${event.date}, ${event.time}</b></div><div class="detail">Venue<b>${event.venue}</b></div><div class="detail">Prize<b>${event.prize}</b></div><div class="detail">Seats remaining<b>${event.seats} seats</b></div><div class="detail">Eligibility<b>All college students</b></div><div class="detail">Organizer<b>College EventHub</b></div></div><button class="btn btn-primary" style="width:100%" id="registerNow" type="button">Register Now</button>`;
+            openModal('eventModal');
+        }
+        function updateRegistrationCount() { document.getElementById('registrationCount').textContent = registrations.length; }
+        function showMyEvents() {
+            if (!registrations.length) { alert('You have not registered for any events yet. Explore an event to get started!'); return; }
+            const last = registrations[registrations.length - 1];
+            document.getElementById('eventPass').innerHTML = `<small>COLLEGE EVENTHUB · EVENT PASS</small><h3>${last.event.title}</h3><span>${last.name} · ${last.branch} · ${last.year}</span><br><span>📅 ${last.event.date} &nbsp; 📍 ${last.event.venue}</span><p class="pass-id">ID: ${last.id}</p>`;
+            openModal('successModal');
+        }
+
+        document.addEventListener('click', event => {
+            const id = event.target.dataset.eventId;
+            if (id) showEvent(events.find(item => item.id === Number(id)));
+            if (event.target.classList.contains('close') || event.target.classList.contains('modal')) closeModals();
+            if (event.target.id === 'registerNow') { closeModals(); document.getElementById('registrationEventName').textContent = selectedEvent.title; openModal('registrationModal'); }
+            if (event.target.id === 'myEventsButton' || event.target.id === 'viewMyEvents') { closeModals(); showMyEvents(); }
+            if (event.target.id === 'featuredButton') { category = 'All'; searchInput.value = ''; document.querySelectorAll('.filter').forEach(btn => btn.classList.toggle('active', btn.dataset.category === 'All')); renderEvents(); document.getElementById('events').scrollIntoView(); }
+            const filter = event.target.closest('.filter, .category');
+            if (filter) { category = filter.dataset.category; document.querySelectorAll('.filter').forEach(btn => btn.classList.toggle('active', btn.dataset.category === category)); renderEvents(); document.getElementById('events').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        });
+        searchInput.addEventListener('input', renderEvents);
+        document.getElementById('registrationForm').addEventListener('submit', event => {
+            event.preventDefault(); const form = event.currentTarget; const message = document.getElementById('formMessage');
+            if (!form.checkValidity()) { message.textContent = 'Please complete every field with valid information.'; form.reportValidity(); return; }
+            const registration = { id: `CEH-2026-${Math.floor(1000 + Math.random() * 9000)}`, name: document.getElementById('name').value.trim(), branch: document.getElementById('branch').value, year: document.getElementById('year').value, event: selectedEvent };
+            registrations.push(registration); localStorage.setItem('cehRegistrations', JSON.stringify(registrations)); updateRegistrationCount(); form.reset(); message.textContent = ''; closeModals(); document.getElementById('eventPass').innerHTML = `<small>COLLEGE EVENTHUB · EVENT PASS</small><h3>${registration.event.title}</h3><span>${registration.name} · ${registration.branch} · ${registration.year}</span><br><span>📅 ${registration.event.date} &nbsp; 📍 ${registration.event.venue}</span><p class="pass-id">ID: ${registration.id}</p>`; openModal('successModal');
+        });
+        document.addEventListener('keydown', event => { if (event.key === 'Escape') closeModals(); });
+        updateRegistrationCount(); renderEvents();
+    </script>
 </body>
 </html>
